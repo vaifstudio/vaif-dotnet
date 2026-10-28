@@ -1,0 +1,16 @@
+{
+  "name": "com.vaifstudio.client",
+  "version": "1.0.0",
+  "displayName": "VAIF Studio Client",
+  "description": "Prepared package metadata; requires the compiled netstandard2.1 SDK and runtime dependencies. See README.md.",
+  "unity": "2021.2",
+  "author": {
+    "name": "VAIF Studio"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vaifstudio/vaif-dotnet"
+  },
+  "documentationUrl": "https://github.com/vaifstudio/vaif-dotnet#unity",
+  "changelogUrl": "https://github.com/vaifstudio/vaif-dotnet/blob/main/CHANGELOG.md"
+}

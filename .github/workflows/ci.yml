@@ -1,0 +1,45 @@
+name: .NET SDK CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk-target: [net8.0, netstandard2.1]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
+        with:
+          dotnet-version: '8.0.x'
+      - name: Check README compilation fixture
+        run: python3 scripts/check-readme.py
+      - name: Restore from NuGet only
+        run: dotnet restore Vaif.Client.sln --configfile NuGet.Config
+      - name: Build both assemblies and README examples
+        run: dotnet build Vaif.Client.sln -c Release --no-restore
+      - name: Test selected SDK assembly on .NET 8
+        run: dotnet test tests/Vaif.Client.Tests -c Release -p:SdkTargetFramework=${{ matrix.sdk-target }} --no-restore --logger 'trx;LogFileName=${{ matrix.sdk-target }}.trx'
+      - name: Test audit failure handling
+        run: python3 -m unittest discover -s scripts -p 'test_*.py'
+      - name: Scan direct and transitive dependencies (fail closed)
+        run: python3 scripts/check-dependencies.py
+      - name: Pack both targets
+        if: matrix.sdk-target == 'net8.0'
+        run: dotnet pack src/Vaif.Client -c Release --no-restore --output artifacts
+      - name: Verify standalone package and SourceLink provenance
+        if: matrix.sdk-target == 'net8.0'
+        run: python3 scripts/check-package.py artifacts/Vaif.Client.1.0.0.nupkg
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: vaif-dotnet-${{ matrix.sdk-target }}
+          path: |
+            artifacts/*
+            tests/**/TestResults/*.trx

@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;netstandard2.1</TargetFrameworks>
+    <LangVersion>12</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarningsAsErrors>$(WarningsAsErrors);CS1591</WarningsAsErrors>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>Vaif.Client</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>VAIF Studio</Authors>
+    <Company>VAIF Studio LLC</Company>
+    <Copyright>Copyright (c) 2026 VAIF Studio LLC</Copyright>
+    <Description>VAIF Studio async client for .NET and Unity: auth, data, storage, functions and realtime.</Description>
+    <RepositoryUrl>https://github.com/vaifstudio/vaif-dotnet</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/vaifstudio/vaif-dotnet</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <Deterministic>true</Deterministic>
+    <EnableSourceControlManagerQueries>true</EnableSourceControlManagerQueries>
+    <EnableSourceLink>true</EnableSourceLink>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
+    <PackageTags>vaif;unity;dotnet;sdk</PackageTags>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+  </PropertyGroup>
+  <ItemGroup><PackageReference Include="System.Text.Json" Version="8.0.5" Condition="'$(TargetFramework)' == 'netstandard2.1'"/></ItemGroup>
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/"/>
+    <None Include="../../CHANGELOG.md" Pack="true" PackagePath="/"/>
+    <None Include="../../LICENSE" Pack="true" PackagePath="/"/>
+  </ItemGroup>
+  <Target Name="RequireStandaloneRepositoryForPack" BeforeTargets="GenerateNuspec">
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)../../.git')" Text="Pack from the standalone vaif-dotnet Git checkout so package provenance names its own source commit." />
+    <Error Condition="'$(SourceRevisionId)' == ''" Text="Package provenance requires a Git source revision." />
+  </Target>
+</Project>

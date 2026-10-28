@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+artifacts/
+TestResults/
+unity/Runtime/*.dll
+__pycache__/
+*.pyc
+.DS_Store

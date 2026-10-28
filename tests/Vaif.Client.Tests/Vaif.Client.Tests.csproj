@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable><IsTestProject>true</IsTestProject>
+    <SdkTargetFramework Condition="'$(SdkTargetFramework)' == ''">net8.0</SdkTargetFramework>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(SdkTargetFramework)' == 'netstandard2.1'">
+    <DefineConstants>$(DefineConstants);SDK_NETSTANDARD</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1"/>
+    <PackageReference Include="xunit" Version="2.9.2"/>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2"><PrivateAssets>all</PrivateAssets></PackageReference>
+    <None Include="../../scripts/check-dependencies.py" Link="audit/check-dependencies.py" CopyToOutputDirectory="PreserveNewest"/>
+    <None Include="../../scripts/test_check_dependencies.py" Link="audit/test_check_dependencies.py" CopyToOutputDirectory="PreserveNewest"/>
+    <ProjectReference Include="../../src/Vaif.Client/Vaif.Client.csproj" SetTargetFramework="TargetFramework=$(SdkTargetFramework)"/>
+  </ItemGroup>
+</Project>

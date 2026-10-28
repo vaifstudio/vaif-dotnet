@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a defect in the C# SDK.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Report security vulnerabilities privately to security@vaif.studio, as described in SECURITY.md, not here.
+        Remove access tokens, refresh tokens, API keys and other credentials from everything you paste.
+  - type: input
+    id: sdk-version
+    attributes:
+      label: SDK version
+      description: The Vaif.Client package version in your project.
+      placeholder: 1.0.0 (or the source commit for an unreleased build)
+    validations:
+      required: true
+  - type: input
+    id: dotnet-version
+    attributes:
+      label: .NET or Unity version and operating system
+      description: Include `dotnet --info`, or the Unity editor version and target platform.
+      placeholder: .NET SDK 8.0.427, Linux x64
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened
+      description: What you expected, what happened instead, and the error's Code and RequestId if there is one.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: A minimal program or test that reproduces the problem.
+      render: csharp
+    validations:
+      required: true
