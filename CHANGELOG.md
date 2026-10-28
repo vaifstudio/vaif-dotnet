@@ -28,6 +28,7 @@ and has not been published. The hosted API and console are not available yet.
 
 ### API coverage and transport
 
+- The base URL must use HTTPS. HTTP is accepted only for `localhost`, `127.0.0.1` and `::1`; any other HTTP base URL throws `VaifException` with code `INVALID_URL`, so the API key and bearer token never travel in cleartext.
 - 775 generated operations and 168 exclusions, each listed with its reason: 134 platform-staff operations and 34 routes without a typed success response.
 - Platform-staff operations have no generated method, and calls to them fail with `STAFF_ONLY` before transport. Dot-segment path values are rejected locally.
 - Redirect and cookie restrictions apply to both assemblies. Signed URL queries are omitted from transfer errors.

@@ -27,6 +27,7 @@ public static partial class SecurityCases
         [nameof(Redirects_never_forward_api_credentials)] = Redirects_never_forward_api_credentials,
         [nameof(Function_text_response_is_returned_as_content)] = Function_text_response_is_returned_as_content,
         [nameof(Realtime_urls_fail_closed)] = Realtime_urls_fail_closed,
+        [nameof(Base_url_requires_https_except_loopback)] = Base_url_requires_https_except_loopback,
         [nameof(Signout_uses_refresh_and_reports_storage_failure)] = Signout_uses_refresh_and_reports_storage_failure,
         [nameof(Refresh_cannot_restore_signed_out_session)] = Refresh_cannot_restore_signed_out_session,
         [nameof(Refresh_cannot_overwrite_replacement_session)] = Refresh_cannot_overwrite_replacement_session,
@@ -57,6 +58,23 @@ public static partial class SecurityCases
         foreach (var url in new[] { "http://example.com", "http://127.0.0.2", "http://localtest.localhost", "ftp://localhost", "https://user:pass@api.test" })
         {
             await ContractAssert.ThrowsAsync<VaifException>(() => { using var c = Make(new AsyncHandler(_ => Json()), url: url); return Task.CompletedTask; });
+        }
+    }
+    // Plain HTTP would send the API key and bearer token in cleartext.
+    public static async Task Base_url_requires_https_except_loopback()
+    {
+        foreach (var pair in new[] { ("https://api.example.com", "https://api.example.com/"), ("HTTPS://api.example.com", "https://api.example.com/"), ("http://localhost:3000", "http://localhost:3000/"), ("http://127.0.0.1:3000", "http://127.0.0.1:3000/"), ("http://[::1]:3000", "http://[::1]:3000/") })
+        {
+            Uri? sent = null;
+            using var c = Make(new AsyncHandler(r => { sent = r.RequestUri; return Json("{\"data\":[]}"); }), url: pair.Item1);
+            await c.From("notes").ListAsync();
+            ContractAssert.Equal(pair.Item2, sent!.GetLeftPart(UriPartial.Authority) + "/");
+        }
+        foreach (var url in new[] { "http://api.example.com", "HTTP://api.example.com", "http://localhost.example.com" })
+        {
+            var error = await ContractAssert.ThrowsAsync<VaifException>(() => { using var c = Make(new AsyncHandler(_ => Json()), url: url); return Task.CompletedTask; });
+            ContractAssert.Equal("INVALID_URL", error.Code);
+            ContractAssert.Equal("Use HTTPS, or HTTP on localhost, 127.0.0.1 or ::1, without URL credentials.", error.Message);
         }
     }
     public static async Task Signout_uses_refresh_and_reports_storage_failure()

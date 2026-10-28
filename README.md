@@ -4,8 +4,11 @@
 > `Vaif.Client` 1.0.0 is the version in this repository, has not been tagged yet and is not on NuGet yet. The hosted API (`https://api.vaif.studio`) and console are not available yet.
 <!-- END GENERATED SDK STATUS: notice:csharp -->
 
-`Vaif.Client` provides asynchronous access to VAIF Studio app authentication,
-data, storage, functions, and realtime. Namespace: `Vaif.Client`.
+`Vaif.Client` provides asynchronous access to VAIF Studio app-user
+authentication, database queries, file storage, functions, and realtime database
+changes. Generated methods on `client.Operations` cover the API's other
+operations, including the VAIF Verament routes under `/ai/copilot`. There is no
+dedicated Verament client in this SDK. Namespace: `Vaif.Client`.
 
 Source: https://github.com/vaifstudio/vaif-dotnet. The installation command
 works once the package is on NuGet. The examples below describe the client API

@@ -6,7 +6,7 @@ namespace Vaif.Client;
 /// <summary>Configures the API endpoint, project, credentials, and session storage for a client.</summary>
 public sealed class VaifClientOptions
 {
-    /// <summary>Gets or sets the API base URL. HTTPS is required except for literal localhost addresses.</summary>
+    /// <summary>Gets or sets the API base URL. HTTPS is required; HTTP is accepted only for localhost, 127.0.0.1 and ::1.</summary>
     public Uri BaseUrl { get; set; } = new Uri("https://api.vaif.studio");
     /// <summary>Gets or sets the API request send and response-header timeout. Defaults to 100 seconds; signed asset transfers use caller cancellation only.</summary>
     public TimeSpan RequestTimeout { get; set; } = TimeSpan.FromSeconds(100);
